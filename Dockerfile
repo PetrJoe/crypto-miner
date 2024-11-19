@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
-
 # Set gcc-9 as default compiler
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100
 
@@ -56,7 +55,6 @@ RUN pip3 install -r requirements.txt
 
 # Expose ports
 EXPOSE 8080
-EXPOSE 4028
 
 # Use supervisor to manage processes
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
