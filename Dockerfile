@@ -45,4 +45,15 @@ COPY entrypoint.sh /crypto-miner/entrypoint.sh
 RUN chmod +x /crypto-miner/entrypoint.sh
 
 # Set the entrypoint
-ENTRYPOINT ["/crypto-miner/entrypoint.sh"]
+# Keep existing content and add these lines before ENTRYPOINT
+RUN apt-get update && apt-get install -y python3 python3-pip
+COPY requirements.txt .
+COPY app.py .
+RUN pip3 install -r requirements.txt
+
+# Add this port exposure
+EXPOSE 8080
+EXPOSE 4028
+
+# Update entrypoint to run both the miner and web server
+CMD ["python3", "app.py"]
