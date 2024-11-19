@@ -7,6 +7,11 @@ WORKDIR /crypto-miner
 # Avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Set mining pool credentials as environment variables
+ENV POOL="stratum2+tcp://v2.stratum.braiins.com/u95GEReVMjK6k5YqiSFNqqTnKU4ypU2Wm8awa6tmbmDmk1bWt"
+ENV USER="PetrJoe.workerName"
+ENV PASSWORD="anything123"
+
 # Install necessary packages with specific versions
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -22,6 +27,8 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     gcc-9 \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Set gcc-9 as default compiler
@@ -38,22 +45,12 @@ RUN wget https://github.com/ckolivas/cgminer/archive/refs/tags/v4.11.1.tar.gz \
     && cd .. \
     && rm -rf cgminer-4.11.1 v4.11.1.tar.gz
 
-# Copy the entrypoint script
-COPY entrypoint.sh /crypto-miner/entrypoint.sh
-
-# Make the entrypoint script executable
-RUN chmod +x /crypto-miner/entrypoint.sh
-
-# Set the entrypoint
-# Keep existing content and add these lines before ENTRYPOINT
-RUN apt-get update && apt-get install -y python3 python3-pip
 COPY requirements.txt .
 COPY app.py .
 RUN pip3 install -r requirements.txt
 
-# Add this port exposure
 EXPOSE 8080
 EXPOSE 4028
 
-# Update entrypoint to run both the miner and web server
-CMD ["python3", "app.py"]
+# Start both cgminer and the web server
+CMD cgminer -o $POOL -u $USER -p $PASSWORD & python3 app.py
