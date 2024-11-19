@@ -54,7 +54,8 @@ COPY supervisord.conf /etc/supervisor/conf.d/
 RUN pip3 install -r requirements.txt
 
 # Expose ports
-EXPOSE 8080
+EXPOSE 8080 4028
+
 
 # Use supervisor to manage processes
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]

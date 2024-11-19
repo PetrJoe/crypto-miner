@@ -46,3 +46,9 @@ Navigate to the project directory and run:
 ```sh
 docker build -t crypto-miner .
 ```
+
+
+## run with cgminer monitoring
+```sh
+docker run -it --name crypto-miner --privileged -p 8080:8080 -p 4028:4028 crypto-miner
+```
