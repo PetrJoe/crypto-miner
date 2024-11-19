@@ -1,0 +1,7 @@
+name: crypto-miner
+service:
+  type: docker
+  dockerfile: Dockerfile
+  ports:
+    - port: 4028
+      protocol: tcp
